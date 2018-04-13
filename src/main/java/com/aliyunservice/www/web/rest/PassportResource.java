@@ -4,6 +4,7 @@ import com.aliyunservice.www.web.rest.errors.InternalServerErrorException;
 import com.aliyunservice.www.web.rest.util.ALiYunORCHttpUtils;
 import com.aliyunservice.www.web.rest.util.FileUtils;
 import com.aliyunservice.www.web.rest.util.HeaderUtil;
+import com.codahale.metrics.annotation.Timed;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.http.HttpResponse;
 import org.apache.http.util.EntityUtils;
@@ -58,6 +59,7 @@ public class PassportResource {
      * @date: 2018/4/14 上午12:04
      */
     @PostMapping("/get-ocr-passport")
+    @Timed
     public ResponseEntity<String> getOcrPassport(@Valid @RequestParam MultipartFile imgFile) {
         log.debug("Rest request to get Passport MultipartFile : {} ", imgFile.toString());
         if (imgFile.isEmpty()) {

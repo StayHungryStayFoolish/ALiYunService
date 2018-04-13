@@ -4,6 +4,7 @@ import com.aliyunservice.www.web.rest.errors.InternalServerErrorException;
 import com.aliyunservice.www.web.rest.util.ALiYunORCHttpUtils;
 import com.aliyunservice.www.web.rest.util.FileUtils;
 import com.aliyunservice.www.web.rest.util.HeaderUtil;
+import com.codahale.metrics.annotation.Timed;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.http.HttpResponse;
 import org.apache.http.util.EntityUtils;
@@ -58,6 +59,7 @@ public class IdCartResource {
      * @date: 2018/4/14 上午12:59
      */
     @PostMapping("/get-ocr-face-idCard")
+    @Timed
     public ResponseEntity<String> getFaceOcrIdCard(@Valid @RequestParam MultipartFile imgFile) {
         log.debug("Rest request to get IdCart MultipartFile : {} ", imgFile.toString());
         String side = "face";
@@ -79,6 +81,7 @@ public class IdCartResource {
      * @date: 2018/4/14 上午1:36
      */
     @PostMapping("/get-ocr-back-idCard")
+    @Timed
     public ResponseEntity<String> getBackOcrIdCard(@Valid @RequestParam MultipartFile imgFile) {
         log.debug("Rest request to get IdCart MultipartFile : {} ", imgFile.toString());
         String side = "back";
