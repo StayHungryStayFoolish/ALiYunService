@@ -2,6 +2,7 @@ package com.aliyunservice.www.web.rest;
 
 import com.aliyunservice.www.web.rest.errors.InternalServerErrorException;
 import com.aliyunservice.www.web.rest.util.ALiYunORCHttpUtils;
+import com.aliyunservice.www.web.rest.util.FileUtils;
 import com.aliyunservice.www.web.rest.util.HeaderUtil;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.http.HttpResponse;
@@ -18,8 +19,6 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.validation.Valid;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -28,7 +27,7 @@ import java.util.Map;
  *
  * @Version: V1.0.0
  * <p>
- * Description: 护照接口
+ * Description: 护照识别接口
  */
 @RestController
 @RequestMapping("/api")
@@ -60,13 +59,13 @@ public class PassportResource {
      */
     @PostMapping("/get-ocr-passport")
     public ResponseEntity<String> getOcrPassport(@Valid @RequestParam MultipartFile imgFile) {
-        log.debug("Rest request to get MultipartFile : {}", imgFile.toString());
+        log.debug("Rest request to get Passport MultipartFile : {} ", imgFile.toString());
         if (imgFile.isEmpty()) {
             throw new InternalServerErrorException("ImgFile can not be null ! ");
         }
         String imgBase64 = "";
         try {
-            File file = convert(imgFile);
+            File file = FileUtils.convert(imgFile);
             byte[] content = new byte[(int) file.length()];
             FileInputStream finputstream = new FileInputStream(file);
             finputstream.read(content);
@@ -76,12 +75,12 @@ public class PassportResource {
             imgBase64 = new String(Base64.encodeBase64(content));
 
 
-            Map<String, String> headers = new HashMap<String, String>();
+            Map<String, String> headers = new HashMap<>();
             // 最后在header中的格式(中间是英文空格)为Authorization:APPCODE 83359fd73fe94948385f570e3c139105
             headers.put("Authorization", "APPCODE " + APP_CODE);
             // 根据API的要求，定义相对应的Content-Type
             headers.put("Content-Type", "application/json; charset=UTF-8");
-            Map<String, String> querys = new HashMap<String, String>();
+            Map<String, String> querys = new HashMap<>();
             // String bodys = "{\"image\":\"base64_image_string\"#图片以base64编码的string}";
             String bodys = "{" + "\"image\"" + ":" + "\"" + imgBase64 + "\"" + "}";
             /*
@@ -100,30 +99,6 @@ public class PassportResource {
                 .headers(HeaderUtil.createEntityUpdateAlert("PassportEntity", file.toString()))
                 .body(passportJson);
         } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
-
-    /**
-     * 转换图片格式
-     *
-     * @description: MultipartFile 转换为 File
-     * @param: file 图片
-     * @return: java.io.File
-     * @author: Bonismo
-     * @version: V1.0.0
-     * @date: 2018/4/13 下午11:46
-     */
-    private static File convert(MultipartFile file) {
-        try {
-            File conFile = new File(file.getOriginalFilename());
-            FileOutputStream fos = new FileOutputStream(conFile);
-            fos.write(file.getBytes());
-            fos.close();
-            return conFile;
-        } catch (IOException e) {
             e.printStackTrace();
         }
         return null;
