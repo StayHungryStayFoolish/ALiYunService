@@ -49,9 +49,9 @@ public class PassportResource {
     private static final String APP_CODE = "372da5885c954fce885e1fbc5a540226";
 
     /**
-     * 根据传入的护照图片返回扫描后的 Json 数据
+     * Post  /scan : get passport info
      *
-     * @description:
+     * @description: 根据传入的护照图片返回扫描后的 Json 数据
      * @param: imgFile 护照图片
      * @return: Json 数据
      * @author: Bonismo
