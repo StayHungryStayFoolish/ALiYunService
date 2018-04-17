@@ -36,7 +36,7 @@ public class IdCartResource {
 
     private final Logger log = LoggerFactory.getLogger(IdCartResource.class);
 
-    // 护照 OCR URL
+    // 身份证 OCR URL
     private static final String HOST = "https://dm-51.data.aliyun.com";
 
     // 请求的 json 数据路径
